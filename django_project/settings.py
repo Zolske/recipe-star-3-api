@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
      'rest_framework',
+     'django_filters',
 
      # need to install
     'django_filters',
