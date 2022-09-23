@@ -59,8 +59,22 @@ INSTALLED_APPS = [
     'cloudinary',
      'rest_framework',
 
+     # need to install
+    'django_filters',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
+
     # apps
     'profiles',
+    'posts',
+    'comments',
+    'likes',
+    'followers',
 ]
 
 MIDDLEWARE = [
