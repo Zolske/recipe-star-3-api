@@ -29,7 +29,6 @@ MEDIA_URL = '/media/'
 # Define Default File Storage to Cloudinary
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -71,17 +70,13 @@ if 'DEV' not in os.environ:
 
 # enable token authentication
 REST_USE_JWT = True
-
 # To ensure tokens sent over HTTPS only
 JWT_AUTH_COOKIE = 'my-app-auth'
-
 # Declare cookie names for the access and refresh tokens
 JWT_AUTH_SECURE = True
 JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
-
 # Overwrite the default USER_DETAILS_SERIALIZER
 REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER': 'django_project.serializers.CurrentUserSerializer'}
-
 # Allow front end app and api be deployed to different platforms
 JWT_AUTH_SAMESITE = 'None'
 
@@ -101,23 +96,11 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', 
     'dj_rest_auth',
     'corsheaders',
-
-
-     # need to install
-    'django_filters',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'dj_rest_auth.registration',
-    'django.contrib.sites', 
-    'allauth', 
-    'allauth.account', 
-    'allauth.socialaccount', 
-    'dj_rest_auth.registration',
-
+    'dj_rest_auth.registration', 
 
     # apps
     'profiles',
@@ -184,6 +167,7 @@ DATABASES = {
     } if 'DEV' in os.environ else dj_database_url.parse(
         os.environ.get('DATABASE_URL')
     ))
+}
 
 
 # Password validation
