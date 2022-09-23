@@ -44,9 +44,33 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Add SITE_ID value
+SITE_ID = 1
+
+# differentiate between Dev and Prod Modes & add pagination Place under SITE_ID
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [( 
+        'rest_framework.authentication.SessionAuthentication' 
+        if 'DEV' in os.environ 
+        else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
+    )]
+    }
+
+# enable token authentication
+REST_USE_JWT = True
+
+# To ensure tokens sent over HTTPS only
+JWT_AUTH_COOKIE = 'my-app-auth'
+
+# Declare cookie names for the access and refresh tokens
+JWT_AUTH_SECURE = True
+JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
+
+# Overwrite the default USER_DETAILS_SERIALIZER
+REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER': 'django_project.serializers.CurrentUserSerializer'}
+
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,8 +81,11 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
-     'rest_framework',
-     'django_filters',
+    'rest_framework',
+    'django_filters',
+    'rest_framework.authtoken', 
+    'dj_rest_auth', 
+
 
      # need to install
     'django_filters',
@@ -69,6 +96,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    'django.contrib.sites', 
+    'allauth', 
+    'allauth.account', 
+    'allauth.socialaccount', 
+    'dj_rest_auth.registration',
+
 
     # apps
     'profiles',
@@ -162,3 +195,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
