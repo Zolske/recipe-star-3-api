@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Add statement to import env.py if it exists
 if os.path.exists('env.py'):
@@ -37,12 +38,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j1_jjq!r(xan_p))zql*5--yuee0v+fl_!jzs0qom@ek24j8+9'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['recipe-star-3-api.herokuapp.com', 'localhost']
 
 # Add SITE_ID value
 SITE_ID = 1
@@ -50,11 +51,23 @@ SITE_ID = 1
 # differentiate between Dev and Prod Modes & add pagination Place under SITE_ID
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [( 
-        'rest_framework.authentication.SessionAuthentication' 
+        'rest_framework.authentication.SessionAuthentication'
         if 'DEV' in os.environ 
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    )]
+    )],
+    # Add Pagination
+    'DEFAULT_PAGINATION_CLASS':  'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    # Format Date and time in REST_FRAMEWORK list
+    'DATETIME_FORMAT': '%d %b %Y'
     }
+
+# Set JSON Renderer if Dev environment is not present
+if 'DEV' not in os.environ:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+        'restframework.renderers.JSONRenderer'
+    ]
+
 
 # enable token authentication
 REST_USE_JWT = True
@@ -69,6 +82,8 @@ JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 # Overwrite the default USER_DETAILS_SERIALIZER
 REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER': 'django_project.serializers.CurrentUserSerializer'}
 
+# Allow front end app and api be deployed to different platforms
+JWT_AUTH_SAMESITE = 'None'
 
 # Application definition
 INSTALLED_APPS = [
@@ -84,7 +99,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework.authtoken', 
-    'dj_rest_auth', 
+    'dj_rest_auth',
+    'corsheaders',
 
 
      # need to install
@@ -112,6 +128,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -120,6 +137,20 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Set the ALLOWED_ORIGINS for the network requests made to the server
+# place under MIDDLEWARE_LIST
+if 'CLIENT_ORIGIN' in os.environ:
+    CORS_ALLOWED_ORIGINS = [
+        os.environ.get('CLIENT_ORIGIN')
+    ]
+else:
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^https://.*\.gitpod\.io$",
+    ]
+
+# Allow Cookies
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'django_project.urls'
 
@@ -145,12 +176,14 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Separate the Dev and Prod Environments
 DATABASES = {
-    'default': {
+    'default': ({
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+    } if 'DEV' in os.environ else dj_database_url.parse(
+        os.environ.get('DATABASE_URL')
+    ))
 
 
 # Password validation
