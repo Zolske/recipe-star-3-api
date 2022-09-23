@@ -29,7 +29,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
     image = models.ImageField(
-        upload_to='images/', default='../default_post_rgq6aq', blank=True
+        upload_to='recipe-star-3-api/images/', default='../default_image_upload_fvsf3n', blank=True
     )
     image_filter = models.CharField(
         max_length=32, choices=image_filter_choices, default='normal'
