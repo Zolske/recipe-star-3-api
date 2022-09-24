@@ -323,7 +323,7 @@ INSTALLED_APPS = [
 
     # app
     'profiles',
-    'recipes',
+    'posts',
     'comments',
     'likes',
     'followers'
