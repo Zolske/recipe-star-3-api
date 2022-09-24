@@ -61,7 +61,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'recipe-star-3.herokuapp.com',
+    # 'recipe-star-3.herokuapp.com', not working 
+    'recipe-star-3-api.herokuapp.com',
     'localhost',
 ]
 
