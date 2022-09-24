@@ -63,7 +63,7 @@ DEBUG = 'DEV' in os.environ
 # DEBUG = True
 
 ALLOWED_HOSTS = [
-    # os.environ.get('ALLOWED_HOST'), # not working 
+    # os.environ.get('ALLOWED_HOST'), # not working  
     'recipe-star-3-api.herokuapp.com',
     'localhost',
 ]
